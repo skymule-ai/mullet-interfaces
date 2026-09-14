@@ -1,0 +1,11 @@
+# Fly back above the takeoff point at the current altitude, then hold there.
+#
+# Accepted from HOLD or MISSION once mullet_core has latched a home at takeoff. The vehicle
+# flies at return_home_speed_mps inside TRANSITION (active_action "return_home") and the goal
+# succeeds on arrival, when the state becomes HOLD. Cancel, or the hold service, stops in
+# place and holds. Land preempts it.
+---
+bool success
+string message
+---
+float32 distance_m     # Horizontal distance to home, metres.

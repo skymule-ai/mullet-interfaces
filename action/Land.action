@@ -1,3 +1,10 @@
+# Land the vehicle and disarm. This is the only land command.
+#
+# Accepted from any state while the vehicle is armed or a takeoff is in progress, and not
+# already landing: it preempts takeoff, return home and missions. A takeoff that has not yet
+# requested arm is simply cancelled and the goal succeeds at once, back in IDLE. Landing is
+# committed once accepted: cancel requests are rejected. Succeeds once PX4 reports disarmed.
+# The emergency kill switch is the RC controller's, not this action.
 ---
 bool success
 string message

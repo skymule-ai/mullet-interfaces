@@ -1,6 +1,13 @@
-float32 altitude_m
-float32 yaw_rad
-bool use_current_yaw
+# Take off to a target altitude and hold there.
+#
+# Accepted from IDLE while disarmed with valid telemetry. mullet_core sequences warmup,
+# Offboard, arm, and ascent internally (TRANSITION, active_action "takeoff") and succeeds
+# once the vehicle has settled at the target, in HOLD. Cancelable; a cancel is handled like
+# Land: before the arm request the vehicle returns to IDLE, after it the vehicle lands.
+float32 altitude_m     # Target altitude above the takeoff point, metres. Rejected outside
+                       # mullet_core's [min_takeoff_altitude_m, max_takeoff_altitude_m].
+float32 yaw_rad        # Target heading, radians. Must be finite when use_current_yaw is false.
+bool use_current_yaw   # True holds the heading the vehicle had at takeoff and ignores yaw_rad.
 ---
 bool success
 string message
@@ -9,4 +16,4 @@ string state
 float32 current_altitude_m
 float32 target_altitude_m
 float32 altitude_error_m
-float32 progress
+float32 progress       # 0.0 to 1.0 toward the target altitude.
