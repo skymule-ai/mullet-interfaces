@@ -1,8 +1,8 @@
 # mullet_interfaces
 
 Shared ROS 2 interface definitions for the Mullet drone stack. This package is the wire
-contract every other Mullet repository builds against: the semantic drone actions and the
-operator-facing heartbeat message.
+contract every other Mullet repository builds against: the semantic drone actions, the
+operator-facing heartbeat message, and the mission API.
 
 It holds IDL and compatibility notes only. No runtime logic, no policy, no code — behavior
 lives in the repositories on either side of this contract.
@@ -14,6 +14,9 @@ action/Takeoff.action           Take off to a target altitude and hold
 action/Land.action              Land and disarm (the only land command)
 action/ReturnHome.action        Fly back above the takeoff point and hold
 msg/DroneHeartbeat.msg          Full per-drone status snapshot
+msg/MissionCommand.msg          Setpoint a mission streams to mullet_core in MISSION
+msg/MissionStatus.msg           Per-framework mission and preflight status snapshot
+srv/LoadMission.srv             Validate and prepare a mission (never starts it)
 ```
 
 `Takeoff` is the only action with a goal payload (`altitude_m`, `yaw_rad`,
@@ -29,6 +32,19 @@ The drone's supervisor state is one of four labels: `IDLE` (on the ground), `TRA
 (takeoff, land or return home in progress — `active_action` says which), `HOLD` (airborne,
 holding position) and `MISSION` (following the external command stream).
 
+### Mission API
+
+A mission framework is a separate node that flies the drone while it is in `MISSION`:
+
+- It streams `MissionCommand` on `<ns>/command`. The `mode` constants name what PX4 tracks:
+  `VELOCITY` (optionally with acceleration feedforward) or `ACCELERATION`. `mullet_core`
+  forwards the stream only in `MISSION` and holds the altitude; outside `MISSION`, and when
+  the stream goes stale, it holds position.
+- It serves `LoadMission` and publishes `MissionStatus` on `/mullet/mission_status`, carrying
+  its `load_service_path` and `spec_schema`. Consumers discover the frameworks a drone offers
+  from that topic alone. Loading only prepares a mission; the operator still starts it with
+  `start_mission`, and should do so only when the framework reports `READY`.
+
 ## Who is on each side
 
 `mullet-core` is the sole producer. It serves the actions and services and is the only
@@ -37,6 +53,10 @@ is accepted from, what a field means, and when it changes are all decided there.
 
 `mullet-paddock` is the operator-facing consumer: its gateway subscribes to the heartbeat
 for drone discovery and status, and calls the actions and services on behalf of the UI.
+
+Mission frameworks (for example `ergodic_mission`) sit on both sides: they produce
+`MissionCommand` for `mullet_core` to consume, and `MissionStatus` and `LoadMission` for the
+paddock.
 
 Anything else that needs drone state or wants to command a drone depends on this package,
 never on `mullet_core` directly. That is the point of the split — a consumer needs the

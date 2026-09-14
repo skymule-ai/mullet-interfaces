@@ -5,9 +5,13 @@ Guidance for AI coding sessions working in this repository.
 ## What this is
 
 `mullet_interfaces` is the ROS 2 wire contract for the Mullet stack: three action definitions
-(`Takeoff`, `Land`, `ReturnHome`) and `msg/DroneHeartbeat.msg`. The instant commands
-`start_mission` and `hold` are `std_srvs/srv/Trigger` services and have no IDL here. `mullet-core` produces both sides of it; `mullet-paddock` and any
-future consumer depend on this package rather than on `mullet_core` itself.
+(`Takeoff`, `Land`, `ReturnHome`), `msg/DroneHeartbeat.msg`, and the mission API
+(`msg/MissionCommand.msg`, `msg/MissionStatus.msg`, `srv/LoadMission.srv`). The instant
+commands `start_mission` and `hold` are `std_srvs/srv/Trigger` services and have no IDL here.
+`mullet-core` produces the actions, services and heartbeat and consumes `MissionCommand`;
+mission framework nodes produce `MissionCommand`, `MissionStatus` and `LoadMission`.
+`mullet-paddock` and any future consumer depend on this package rather than on
+`mullet_core` itself.
 
 **IDL only.** No runtime logic, no policy, no defaults that encode behavior. Any rule about
 *when* an action is accepted or *what* a field means belongs in the producer, and is recorded
@@ -35,7 +39,7 @@ colcon build --packages-select mullet_interfaces
 ros2 interface show mullet_interfaces/msg/DroneHeartbeat
 ```
 
-New `.msg` or `.action` files must be registered in `rosidl_generate_interfaces()` in
+New `.msg`, `.srv` or `.action` files must be registered in `rosidl_generate_interfaces()` in
 `CMakeLists.txt` or they are silently not generated.
 
 `README.md` carries the full contract description, the request protocol, and the consumer
