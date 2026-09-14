@@ -11,11 +11,8 @@ find_package(builtin_interfaces REQUIRED)
 
 rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/DroneHeartbeat.msg"
-  "action/Arm.action"
-  "action/DisableOffboard.action"
-  "action/Disarm.action"
-  "action/EnableOffboard.action"
   "action/Land.action"
+  "action/ReturnHome.action"
   "action/Takeoff.action"
   DEPENDENCIES builtin_interfaces
 )
