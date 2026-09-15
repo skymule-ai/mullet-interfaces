@@ -40,7 +40,7 @@ string active_action     # "takeoff", "land" or "return_home" while TRANSITION, 
 bool has_vehicle_status
 bool has_local_position
 bool has_land_detected
-bool has_command_stream  # An external velocity command has been received at some point.
+bool has_command_stream  # A valid MissionCommand has been received at some point.
 
 # --- Vehicle condition ----------------------------------------------------------------
 bool armed
@@ -48,7 +48,7 @@ bool offboard
 bool px4_failsafe        # Mirrors PX4 VehicleStatus.failsafe. Observability only.
 bool landed
 bool local_position_valid
-bool command_stream_valid  # The latest external velocity command is still within its timeout.
+bool command_stream_valid  # The latest MissionCommand is still within its timeout.
                            # False in MISSION means the drone is holding its last position.
 
 # --- PX4 status -----------------------------------------------------------------------

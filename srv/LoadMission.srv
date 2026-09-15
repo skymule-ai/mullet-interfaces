@@ -1,0 +1,13 @@
+# Validate and prepare a mission on the drone. Served by a mission framework node at the
+# load_service_path it advertises in MissionStatus.
+#
+# Loading never starts a flight: the operator does, through mullet_core's start_mission. The
+# reply only says whether the spec was accepted for preparation; the framework then runs its
+# preflight checks and reports READY or FAULT in MissionStatus. A new load replaces the
+# previous mission and is refused while one is running.
+string spec_json    # Framework-defined JSON document; its "schema" key names the format,
+                    # e.g. "ergodic/1", and must match MissionStatus.spec_schema.
+---
+bool accepted
+string reason       # Why the spec was refused. Empty when accepted.
+string mission_id   # Identifier the framework reports in MissionStatus for this mission.
