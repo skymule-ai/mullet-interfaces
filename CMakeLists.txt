@@ -13,6 +13,7 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/DroneHeartbeat.msg"
   "msg/MissionCommand.msg"
   "msg/MissionStatus.msg"
+  "srv/ListMissions.srv"
   "srv/LoadMission.srv"
   "action/Land.action"
   "action/ReturnHome.action"

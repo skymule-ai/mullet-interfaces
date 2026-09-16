@@ -1,0 +1,8 @@
+# List the mission specs a framework accepted on this drone. Served by a mission framework
+# node at the list_service_path it advertises in MissionStatus.
+#
+# The drone is the mission library: every spec LoadMission accepted is kept, so an operator
+# can inspect it or load it again. The two arrays are parallel, newest first.
+---
+string[] names       # "<UTC stamp>_<mission_id>", unique per stored spec.
+string[] specs_json  # The spec document exactly as it was loaded.

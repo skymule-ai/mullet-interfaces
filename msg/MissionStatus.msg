@@ -9,6 +9,7 @@ string drone_id            # Matches DroneHeartbeat.drone_id.
 string framework           # e.g. "ergodic".
 string spec_schema         # Spec format load_service_path accepts, e.g. "ergodic/1".
 string load_service_path   # Fully-qualified mullet_interfaces/srv/LoadMission service.
+string list_service_path   # Fully-qualified mullet_interfaces/srv/ListMissions service.
 
 # --- Mission ------------------------------------------------------------------------------
 # Labels: SELF_TEST (checking itself after boot), EMPTY (nothing loaded), PREPARING
