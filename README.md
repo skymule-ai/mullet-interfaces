@@ -16,6 +16,7 @@ action/ReturnHome.action        Fly back above the takeoff point and hold
 msg/DroneHeartbeat.msg          Full per-drone status snapshot
 msg/MissionCommand.msg          Setpoint a mission streams to mullet_core in MISSION
 msg/MissionStatus.msg           Per-framework mission and preflight status snapshot
+srv/ListMissions.srv            Mission specs a framework accepted on this drone
 srv/LoadMission.srv             Validate and prepare a mission (never starts it)
 ```
 
@@ -37,13 +38,16 @@ holding position) and `MISSION` (following the external command stream).
 A mission framework is a separate node that flies the drone while it is in `MISSION`:
 
 - It streams `MissionCommand` on `<ns>/command`. The `mode` constants name what PX4 tracks:
-  `VELOCITY` (optionally with acceleration feedforward) or `ACCELERATION`. `mullet_core`
-  forwards the stream only in `MISSION` and holds the altitude; outside `MISSION`, and when
-  the stream goes stale, it holds position.
+  `VELOCITY` (optionally with acceleration feedforward) or `ACCELERATION`, and their 3D
+  variants `VELOCITY_3D` and `ACCELERATION_3D`. `mullet_core` forwards the stream only in
+  `MISSION`; in the planar modes it holds the altitude, in the 3D modes the command drives z
+  too. Outside `MISSION`, and when the stream goes stale, it holds position.
 - It serves `LoadMission` and publishes `MissionStatus` on `/mullet/mission_status`, carrying
   its `load_service_path` and `spec_schema`. Consumers discover the frameworks a drone offers
   from that topic alone. Loading only prepares a mission; the operator still starts it with
   `start_mission`, and should do so only when the framework reports `READY`.
+- It serves `ListMissions` at the `list_service_path` it advertises: every spec it accepted,
+  kept on the drone, so the operator can inspect or reload a previous mission.
 
 ## Who is on each side
 
