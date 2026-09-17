@@ -38,8 +38,10 @@ holding position) and `MISSION` (following the external command stream).
 A mission framework is a separate node that flies the drone while it is in `MISSION`:
 
 - It streams `MissionCommand` on `<ns>/command`. The `mode` constants name what PX4 tracks:
-  `VELOCITY` (optionally with acceleration feedforward) or `ACCELERATION`, and their 3D
-  variants `VELOCITY_3D` and `ACCELERATION_3D`. `mullet_core` forwards the stream only in
+  `TRAJECTORY` (a planned position with velocity and optional acceleration feedforward, so
+  PX4's position loop corrects the tracking error), `VELOCITY` (optionally with acceleration
+  feedforward) or `ACCELERATION`, and their 3D variants `TRAJECTORY_3D`, `VELOCITY_3D` and
+  `ACCELERATION_3D`. `mullet_core` forwards the stream only in
   `MISSION`; in the planar modes it holds the altitude, in the 3D modes the command drives z
   too. Outside `MISSION`, and when the stream goes stale, it holds position.
 - It serves `LoadMission` and publishes `MissionStatus` on `/mullet/mission_status`, carrying
