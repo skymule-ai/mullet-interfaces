@@ -11,6 +11,7 @@ find_package(builtin_interfaces REQUIRED)
 
 rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/DroneHeartbeat.msg"
+  "msg/LocalizationStatus.msg"
   "msg/MissionCommand.msg"
   "msg/MissionStatus.msg"
   "srv/ListMissions.srv"

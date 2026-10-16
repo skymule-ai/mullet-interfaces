@@ -14,6 +14,7 @@ action/Takeoff.action           Take off to a target altitude and hold
 action/Land.action              Land and disarm (the only land command)
 action/ReturnHome.action        Fly back above the takeoff point and hold
 msg/DroneHeartbeat.msg          Full per-drone status snapshot
+msg/LocalizationStatus.msg      Which sources PX4 fuses (GNSS, vision, compass), 1 Hz
 msg/MissionCommand.msg          Setpoint a mission streams to mullet_core in MISSION
 msg/MissionStatus.msg           Per-framework mission and preflight status snapshot
 srv/ListMissions.srv            Mission specs a framework accepted on this drone
